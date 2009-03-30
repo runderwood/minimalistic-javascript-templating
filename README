@@ -1,0 +1,21 @@
+Simple, minimal javascript templating.
+
+Examples:
+
+var mytemplate = "<h1>Welcome, <%= user.name %>!</h1>";
+tpl.render(mytemplate, {user: {name: "John" } });
+>>>"<h1>Welcome, John!</h1>"
+
+var mytemplate = "<% if glossary %><dl>
+    <% for k,v in glossary %>
+    <dt><%= k %></dt>
+    <dd><%= v %></dd>
+    <% endfor %>
+</dl><% endif %>";
+tpl.render(mytemplate, {glossary: {'pants': "something you should wear", 'pencil': "something with which one can write" }});
+>>>"<dl>
+    <dt>pants</dt>
+    <dd>something you should wear</dd>
+    <dt>pencil</dt>
+    <dd>something with which one can write</dd>
+</dl>"
