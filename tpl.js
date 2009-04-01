@@ -43,7 +43,7 @@ tpl.t.prototype = {
     _tags: {
         'FOR': { 
             pattern: /^for\s+([A-Za-z]\w*)\s*,\s*([A-Za-z]\w*)\s+in\s+([A-Za-z][A-Za-z0-9_\]\[.]*)$/,
-            'do': function(c, tlist, ctxt) {
+            'do_': function(c, tlist, ctxt) {
                 var closed = false;
                 for(var i=0, forr=0; i<tlist.length; i++) {
                     if(tlist[i][0] == "FOR") forr++;
@@ -74,13 +74,13 @@ tpl.t.prototype = {
         },
         'ENDFOR': {
             pattern: /^endfor$/,
-            'do': function(c, tlist, ctxt) {
+            'do_': function(c, tlist, ctxt) {
                 return this.evaluate(tlist, ctxt);    
             }
         },
         'IF': { 
             pattern: /^if\s+(.*)$/,
-            'do': function(c, tlist, ctxt) {
+            'do_': function(c, tlist, ctxt) {
                 var closed = false;
                 var elsse = false;
                 for(var i=0, iff=0; i<tlist.length; i++) {
@@ -112,20 +112,20 @@ tpl.t.prototype = {
         },
         'ELSE': {
             pattern: /^else$/,
-            'do': function(c, tlist, ctxt) {
+            'do_': function(c, tlist, ctxt) {
                 return this.evaluate(tlist);    
             }
 
         },
         'ENDIF': {
             pattern: /^endif$/,
-            'do': function(c, tlist, ctxt) {
+            'do_': function(c, tlist, ctxt) {
                 return this.evaluate(tlist);    
             }
         },
         'EQ': {
             pattern: /^=\s*([A-Za-z][\]\[A-Za-z0-9._]*)$/,
-            'do': function(c, tlist, ctxt) {
+            'do_': function(c, tlist, ctxt) {
                 return pathresolve(c[2], ctxt)+this.evaluate(tlist, ctxt);    
             }
         }
@@ -167,7 +167,7 @@ tpl.t.prototype = {
         var offset = 0;
         var src = this._src;
         for(var i=0; i<src.length; i++, offset++) {
-            var ch = this._src[i];
+            var ch = this._src.charAt(i);
             if(ch == this.D && this.last_in() == this.L) {
                 this._theap.push(this.chop(this._buffer)); // put terminals directly on the heap
                 this._buffer = '';
@@ -196,7 +196,7 @@ tpl.t.prototype = {
         var tlist = tlist_.slice();
         var c = tlist.shift();
         var ctxt = ctxt || {};
-        return this._tags[c[0]] && this._tags[c[0]].do ? this._tags[c[0]].do.call(this, c, tlist, ctxt) : c+this.evaluate(tlist, ctxt);
+        return this._tags[c[0]] && this._tags[c[0]].do_ ? this._tags[c[0]].do_.call(this, c, tlist, ctxt) : c+this.evaluate(tlist, ctxt);
     },
     render: function() {
         if(!this._theap || !this._theap.length) this.scan();
